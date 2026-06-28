@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="title desc">
+  <title id="title">TacoFlash icon 192</title>
+  <desc id="desc">Icon: semicircle in yellow with a lightning-bolt cutout.</desc>
+  <rect width="100%" height="100%" fill="#fff9f4" />
+  <g transform="translate(20,20)">
+    <path d="M10 70a70 70 0 0 1 140 0v0c0 38-32 70-70 70S10 108 10 70z" fill="#FFB347"/>
+    <path d="M56 48 L72 48 L62 84 L82 84 L60 140 L66 96 L50 96 Z" fill="#ffffff"/>
+  </g>
+</svg>

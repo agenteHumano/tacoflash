@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="t d">
+  <title id="t">TacoFlash favicon</title>
+  <desc id="d">Small favicon using the lightning semicircle</desc>
+  <rect width="100%" height="100%" fill="#ffb347" />
+  <path d="M6 24a18 18 0 0 1 36 0v0c0 10-8 18-18 18S6 34 6 24z" fill="#FFB347"/>
+  <path d="M14 16 L19 16 L16 28 L22 28 L16 40 L17 30 L13 30 Z" fill="#fff"/>
+</svg>

@@ -1,0 +1,20 @@
+{
+  "name": "TacoFlash",
+  "short_name": "TacoFlash",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff9f4",
+  "theme_color": "#ffb347",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

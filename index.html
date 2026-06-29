@@ -6,11 +6,30 @@
   <title>TacoFlash — Que la comanda llegue clara</title>
   <meta name="description" content="TacoFlash ayuda a tus meseros a mandar pedidos desde su celular directo a cocina. Menos errores, servicio más rápido y sin cambiar tu sazón." />
 
+  <!-- Open Graph / Twitter Card -->
+  <meta property="og:title" content="TacoFlash — Que la comanda llegue clara" />
+  <meta property="og:description" content="Pedidos desde el celular directo a cocina. Menos errores, más rapidez." />
+  <meta property="og:image" content="/og-image.svg" />
+  <meta property="og:url" content="https://tacoflash.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+
   <!-- Favicon & App icons -->
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/icon-192.svg">
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#ffb347">
+
+  <!-- JSON-LD Organization -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"TacoFlash",
+    "url":"https://tacoflash.com",
+    "logo":"https://tacoflash.com/logo.svg",
+    "contactPoint":[{"@type":"ContactPoint","telephone":"+52-555-555-5555","contactType":"sales"}]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -50,7 +69,7 @@
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
-          <!-- Simple taco illustration -->
+          <!-- Hero mockup: icon + simple illustration (keeps original art but more product emphasis) -->
           <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="taco-ill">
             <defs>
               <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
@@ -59,12 +78,15 @@
               </linearGradient>
             </defs>
             <rect width="100%" height="100%" rx="20" fill="url(#g)" />
-            <g transform="translate(80,70)" fill="#fff">
-              <ellipse cx="230" cy="150" rx="210" ry="90" fill="#F6E1B3"/>
-              <path d="M30 155 Q60 55 330 80 Q420 90 510 155 Q420 225 330 245 Q120 265 30 155Z" fill="#E6B86A"/>
-              <circle cx="210" cy="120" r="18" fill="#C94A3A"/>
-              <circle cx="270" cy="140" r="12" fill="#6BA34A"/>
-              <circle cx="160" cy="135" r="10" fill="#C94A3A"/>
+            <g transform="translate(80,50)" fill="#fff">
+              <rect x="220" y="50" width="120" height="220" rx="20" fill="#fff" opacity="0.95" />
+              <rect x="232" y="64" width="96" height="28" rx="6" fill="#ffb347" />
+              <rect x="240" y="110" width="80" height="12" rx="6" fill="#eee" />
+              <rect x="240" y="136" width="80" height="12" rx="6" fill="#eee" />
+              <rect x="240" y="162" width="80" height="12" rx="6" fill="#eee" />
+              <!-- small taco shapes to the left -->
+              <ellipse cx="110" cy="210" rx="110" ry="50" fill="#F6E1B3"/>
+              <path d="M10 215 Q40 115 310 140 Q400 150 490 215 Q400 285 310 305 Q100 325 10 215Z" fill="#E6B86A"/>
             </g>
           </svg>
         </div>
@@ -133,6 +155,10 @@
         </div>
 
         <form id="lead-form" class="lead-form" novalidate aria-labelledby="registro">
+          <!-- honeypot field to trap bots -->
+          <label class="honeypot-label" for="website">Website</label>
+          <input id="website" name="website" type="text" class="honeypot" autocomplete="off" tabindex="-1" />
+
           <label for="taqueria">Nombre de la taquería</label>
           <input id="taqueria" name="taqueria" type="text" required placeholder="Ej. Taquería El Buen Comer" />
 
@@ -140,7 +166,8 @@
           <input id="contacto" name="contacto" type="text" required placeholder="Tu nombre" />
 
           <label for="telefono">Teléfono o WhatsApp</label>
-          <input id="telefono" name="telefono" type="tel" required placeholder="55 1234 5678" />
+          <input id="telefono" name="telefono" type="tel" inputmode="tel" pattern="[0-9 ()+\-]{7,}" required aria-describedby="telefono-help" placeholder="55 1234 5678" />
+          <small id="telefono-help" class="muted">Usamos este dato solo para contactarte — nunca compartimos tu número.</small>
 
           <label for="mensaje">Mensaje (opcional)</label>
           <textarea id="mensaje" name="mensaje" rows="3" placeholder="Horario de atención, sucursal, etc."></textarea>

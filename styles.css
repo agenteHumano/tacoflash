@@ -1,7 +1,7 @@
 :root{
   --bg:#fff9f4;
   --muted:#6b6b6b;
-  --accent:#ff7043;
+  --accent:#d97706; /* darker accent for better contrast */
   --accent-2:#ffb347;
   --card:#ffffff;
   --glass: rgba(255,255,255,0.7);
@@ -24,6 +24,12 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #
 .nav{display:flex;gap:14px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
 .nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:8px 14px;border-radius:10px;text-decoration:none;font-weight:600}
+
+/* Responsive brand: hide text on small screens */
+@media (max-width:600px){
+  .brand .brand-text{display:none}
+  .brand .logo{width:36px}
+}
 
 /* Hero */
 .hero{padding:56px 0}
@@ -60,6 +66,11 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #
 .lead-form input,.lead-form textarea{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);font-size:0.95rem}
 .form-actions{display:flex;justify-content:flex-end;margin-top:6px}
 .form-feedback{color:green;margin-top:8px;font-weight:600}
+.muted{color:var(--muted);font-size:0.9rem}
+
+/* Honeypot (hidden to users, visible to bots) */
+.honeypot{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.honeypot-label{position:absolute;left:-9999px}
 
 /* Footer */
 .site-footer{padding:20px 0;border-top:1px solid rgba(0,0,0,0.04)}
@@ -78,4 +89,9 @@ html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, #
 @media (max-width:520px){
   .hero-copy h1{font-size:1.6rem}
   .brand{font-size:1rem}
+}
+
+/* Floating CTA bar for mobile */
+@media (max-width:600px){
+  .floating-cta{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;display:flex;justify-content:center}
 }

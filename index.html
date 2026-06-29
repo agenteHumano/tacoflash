@@ -1,1 +1,586 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TacoFlash ayuda a tus meseros a mandar pedidos desde su celular directo a cocina.">
+  <meta name="theme-color" content="#1E1E1E">
+  <title>TacoFlash — La comanda clara cuando se llena</title>
+  <style>
+    :root {
+      --yellow: #E8B63A;
+      --graphite: #1E1E1E;
+      --white: #FFFFFF;
+      --gray: #6B7280;
+      --line: #E7E7E3;
+      --soft: #F7F7F4;
+      --ink-soft: #414141;
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --container: 1160px;
+      --font: Inter, Geist, Manrope, Sora, "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--graphite);
+      background: var(--white);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button, input, textarea { font: inherit; }
+    ::selection { background: var(--yellow); color: var(--graphite); }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 20;
+      padding: 10px 14px;
+      color: var(--graphite);
+      background: var(--yellow);
+      border-radius: 8px;
+      transform: translateY(-180%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
+    .section { padding: 112px 0; }
+    .section--soft { background: var(--soft); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      color: var(--gray);
+      font-size: .78rem;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      background: var(--yellow);
+      border-radius: 50%;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { letter-spacing: -.045em; line-height: 1.02; }
+    h1 { max-width: 760px; margin-bottom: 22px; font-size: clamp(3.1rem, 7vw, 6.25rem); font-weight: 750; }
+    h2 { max-width: 690px; margin-bottom: 24px; font-size: clamp(2.15rem, 4.4vw, 4.25rem); font-weight: 720; }
+    h3 { margin-bottom: 12px; font-size: 1.28rem; font-weight: 700; }
+    .lead { max-width: 590px; margin-bottom: 30px; color: var(--ink-soft); font-size: clamp(1.1rem, 1.7vw, 1.34rem); line-height: 1.5; }
+    .muted { color: var(--gray); }
+
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--graphite);
+      background: var(--yellow);
+      font-size: .98rem;
+      font-weight: 760;
+      line-height: 1;
+      transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+    .button:hover { background: #DDA82D; }
+    .button:active { transform: translateY(1px); }
+    .button--dark { color: var(--white); background: var(--graphite); }
+    .button--dark:hover { background: #383838; }
+    .arrow { font-size: 1.12em; line-height: 0; }
+
+    :focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 4px;
+    }
+
+    /* Header */
+    .site-header { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 26px; }
+    .brand { display: inline-flex; align-items: center; gap: 9px; min-width: 145px; font-size: 1.42rem; font-weight: 500; letter-spacing: -.06em; }
+    .brand strong { font-weight: 790; }
+    .brand-mark { width: 37px; height: 31px; flex: 0 0 auto; color: var(--yellow); --cut: var(--white); }
+    .brand-mark path { vector-effect: non-scaling-stroke; }
+    .nav-links { display: flex; align-items: center; justify-content: center; gap: 26px; margin-left: auto; color: #4A4A4A; font-size: .9rem; font-weight: 650; }
+    .nav-links a:hover { color: var(--graphite); }
+    .nav .button { min-height: 44px; padding: 11px 15px; white-space: nowrap; font-size: .88rem; }
+
+    /* Hero */
+    .hero { overflow: hidden; padding: 74px 0 88px; border-bottom: 1px solid var(--line); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, .94fr) minmax(430px, .86fr); gap: clamp(42px, 8vw, 110px); align-items: center; }
+    .hero-copy { padding-bottom: 8px; }
+    .hero-copy .lead { max-width: 520px; }
+    .hero-emphasis { color: var(--yellow); }
+
+    .product-stage { position: relative; min-height: 570px; display: grid; align-items: center; justify-items: center; }
+    .stage-grid {
+      position: absolute;
+      inset: 20px 0 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: #FCFCFA;
+    }
+    .stage-grid::before, .stage-grid::after { content: ""; position: absolute; background: var(--line); }
+    .stage-grid::before { top: 14px; bottom: 14px; left: 50%; width: 1px; }
+    .stage-grid::after { left: 14px; right: 14px; top: 50%; height: 1px; }
+    .stage-note {
+      position: absolute;
+      left: 26px;
+      top: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--gray);
+      font-size: .72rem;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .stage-note i { width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+
+    .phone {
+      position: relative;
+      z-index: 2;
+      width: min(318px, 67vw);
+      padding: 10px;
+      border: 1px solid #353535;
+      border-radius: 38px;
+      background: var(--graphite);
+      transform: translateX(-34px);
+    }
+    .phone-screen { overflow: hidden; min-height: 502px; padding: 19px 16px 16px; border-radius: 29px; background: #FCFCFA; }
+    .phone-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 21px; }
+    .phone-title { font-size: .83rem; font-weight: 780; letter-spacing: -.02em; }
+    .online-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 999px; background: #F0EFEA; color: #525252; font-size: .62rem; font-weight: 750; }
+    .online-chip span { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); }
+    .table-panel { display: flex; align-items: end; justify-content: space-between; margin-bottom: 15px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+    .small-label { display: block; margin-bottom: 2px; color: var(--gray); font-size: .66rem; font-weight: 720; letter-spacing: .07em; text-transform: uppercase; }
+    .table-number { font-size: 1.55rem; font-weight: 800; letter-spacing: -.07em; }
+    .time { color: var(--gray); font-size: .72rem; font-weight: 650; }
+    .order-list { display: grid; gap: 8px; margin-bottom: 14px; }
+    .order-line { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+    .quantity { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 8px; color: var(--graphite); background: #F5E5B5; font-size: .7rem; font-weight: 800; }
+    .order-line b { display: block; margin-bottom: 1px; font-size: .76rem; letter-spacing: -.015em; }
+    .order-line span { display: block; color: var(--gray); font-size: .65rem; line-height: 1.3; }
+    .send-button { width: 100%; min-height: 46px; border: 0; border-radius: 10px; color: var(--graphite); background: var(--yellow); font-size: .78rem; font-weight: 800; cursor: default; }
+
+    .kitchen-ticket {
+      position: absolute;
+      right: 10px;
+      bottom: 43px;
+      z-index: 3;
+      width: 226px;
+      padding: 19px;
+      border: 1px solid var(--graphite);
+      border-radius: 16px;
+      background: var(--white);
+    }
+    .ticket-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 11px; border-bottom: 1px dashed #CFCFC8; }
+    .ticket-head b { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+    .ticket-head span { color: var(--gray); font-size: .65rem; font-weight: 700; }
+    .ticket-table { margin-bottom: 12px; font-size: 1.3rem; font-weight: 800; letter-spacing: -.06em; }
+    .ticket-item { display: flex; justify-content: space-between; gap: 10px; margin: 7px 0; color: #363636; font-size: .7rem; }
+    .ticket-item b { font-size: .7rem; }
+    .ticket-status { display: flex; align-items: center; gap: 7px; margin-top: 15px; padding-top: 12px; border-top: 1px dashed #CFCFC8; color: #4E4E4E; font-size: .67rem; font-weight: 760; }
+    .ticket-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+    /* Change */
+    .section-head { display: grid; grid-template-columns: minmax(0, .8fr) minmax(260px, .42fr); gap: 40px; align-items: end; margin-bottom: 52px; }
+    .section-head p { max-width: 380px; margin-bottom: 4px; color: var(--gray); }
+    .benefit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .benefit-card { overflow: hidden; min-height: 390px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--white); }
+    .benefit-visual { position: relative; display: grid; min-height: 170px; margin: -25px -25px 26px; padding: 22px; place-items: center; border-bottom: 1px solid var(--line); background: #FBFBF9; }
+    .benefit-card p { margin-bottom: 0; color: var(--gray); font-size: .95rem; }
+
+    .clarity-note { width: 178px; padding: 13px; border: 1px solid var(--graphite); border-radius: 12px; background: var(--white); transform: rotate(-3deg); }
+    .scribble { height: 8px; margin: 9px 0; border-radius: 999px; background: #3F3F3F; opacity: .86; }
+    .scribble:nth-child(3) { width: 74%; }
+    .scribble:nth-child(4) { width: 90%; }
+    .clarity-check { position: absolute; right: calc(50% - 108px); bottom: 20px; display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--graphite); border-radius: 50%; color: var(--graphite); background: var(--yellow); font-size: 1.1rem; font-weight: 900; }
+
+    .phone-mini { width: 128px; padding: 6px; border: 1px solid var(--graphite); border-radius: 18px; background: var(--graphite); transform: rotate(4deg); }
+    .phone-mini-inner { height: 141px; padding: 13px 8px; border-radius: 13px; background: var(--white); }
+    .phone-mini-line { height: 10px; margin-bottom: 8px; border-radius: 4px; background: var(--line); }
+    .phone-mini-line:nth-child(1) { width: 62%; margin-bottom: 16px; background: var(--graphite); }
+    .phone-mini-line:nth-child(4) { width: 74%; }
+    .phone-mini-action { height: 23px; margin-top: 13px; border-radius: 5px; background: var(--yellow); }
+    .motion-path { position: absolute; right: 24px; bottom: 27px; width: 82px; height: 58px; border-right: 1.5px solid var(--graphite); border-bottom: 1.5px solid var(--graphite); border-radius: 0 0 22px 0; }
+    .motion-path::after { content: ""; position: absolute; right: -4px; bottom: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+
+    .taco-shape { position: relative; width: 162px; height: 90px; overflow: hidden; border: 1px solid var(--graphite); border-radius: 88px 88px 18px 18px; background: var(--yellow); }
+    .taco-shape::before { content: ""; position: absolute; left: 17px; right: 17px; top: 49px; height: 1px; background: var(--graphite); }
+    .taco-shape::after { content: ""; position: absolute; left: 34px; top: 59px; width: 93px; height: 10px; border-radius: 50%; border-top: 1px solid rgba(30,30,30,.42); }
+    .fixed-rhythm { position: absolute; left: 24px; top: 21px; display: grid; gap: 5px; }
+    .fixed-rhythm span { display: block; width: 33px; height: 5px; border-radius: 999px; background: var(--graphite); opacity: .92; }
+    .fixed-rhythm span:nth-child(2) { width: 24px; }
+
+    /* How it works */
+    .workflow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 16px; }
+    .step { min-height: 306px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--white); }
+    .step-num { display: grid; width: 33px; height: 33px; place-items: center; margin-bottom: 22px; border-radius: 50%; color: var(--graphite); background: var(--yellow); font-size: .78rem; font-weight: 850; }
+    .step p { margin-bottom: 0; color: var(--gray); }
+    .step-visual { min-height: 104px; margin-bottom: 20px; }
+    .menu-list { display: grid; gap: 7px; }
+    .menu-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; color: #555; font-size: .72rem; font-weight: 700; }
+    .menu-row em { font-style: normal; color: var(--gray); font-size: .65rem; }
+    .step-arrow { width: 38px; height: 1px; background: var(--graphite); position: relative; }
+    .step-arrow::after { content: ""; position: absolute; top: -4px; right: 0; width: 8px; height: 8px; border-top: 1px solid var(--graphite); border-right: 1px solid var(--graphite); transform: rotate(45deg); }
+    .take-order { display: grid; grid-template-columns: 40px 1fr; gap: 9px; align-items: center; padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: #FBFBF9; }
+    .take-order-icon { width: 40px; height: 44px; border: 1px solid var(--graphite); border-radius: 7px; background: var(--graphite); }
+    .take-order-lines { display: grid; gap: 6px; }
+    .take-order-lines span { display: block; height: 6px; border-radius: 4px; background: var(--line); }
+    .take-order-lines span:nth-child(1) { width: 57%; background: var(--graphite); }
+    .take-order-lines span:nth-child(3) { width: 74%; }
+    .kitchen-card { padding: 12px; border: 1px solid var(--graphite); border-radius: 10px; background: var(--white); }
+    .kitchen-card-top { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #BFBFB8; color: var(--graphite); font-size: .65rem; font-weight: 800; }
+    .kitchen-card-lines { display: grid; gap: 7px; }
+    .kitchen-card-lines span { display: block; height: 6px; border-radius: 4px; background: #D9D9D4; }
+    .kitchen-card-lines span:nth-child(1) { width: 81%; background: var(--graphite); }
+    .kitchen-card-lines span:nth-child(3) { width: 63%; }
+
+    /* Why */
+    .why { color: var(--white); background: var(--graphite); }
+    .why .eyebrow { color: #BDBDB8; }
+    .why .eyebrow::before { background: var(--yellow); }
+    .why-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(310px, .62fr); gap: clamp(44px, 9vw, 128px); align-items: center; }
+    .why h2 { max-width: 680px; }
+    .why p { max-width: 620px; color: #C7C7C1; font-size: 1.06rem; }
+    .why p:last-child { margin-bottom: 0; }
+    .why-visual { padding: 23px; border: 1px solid #4D4D49; border-radius: var(--radius-md); }
+    .peak-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 21px; color: #EDEDE9; font-size: .78rem; font-weight: 790; letter-spacing: .08em; text-transform: uppercase; }
+    .peak-head span { display: inline-flex; align-items: center; gap: 7px; color: #C5C5BF; font-size: .67rem; letter-spacing: .03em; text-transform: none; }
+    .peak-head i { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+    .peak-orders { display: grid; gap: 10px; }
+    .peak-order { display: grid; grid-template-columns: 13px 1fr auto; gap: 10px; align-items: center; min-height: 58px; padding: 12px; border: 1px solid #4D4D49; border-radius: 10px; background: #252525; }
+    .peak-order .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+    .peak-order b { display: block; margin-bottom: 2px; color: #F4F4F1; font-size: .78rem; }
+    .peak-order small { display: block; color: #A9A9A4; font-size: .65rem; }
+    .peak-order time { color: #C2C2BC; font-size: .66rem; font-weight: 700; }
+    .peak-foot { display: flex; align-items: center; gap: 8px; margin-top: 18px; padding-top: 17px; border-top: 1px solid #4D4D49; color: #DFDFD9; font-size: .74rem; font-weight: 700; }
+    .peak-foot svg { width: 18px; height: 18px; color: var(--yellow); }
+
+    /* Final */
+    .final { padding: 104px 0; background: var(--yellow); }
+    .final-grid { display: grid; grid-template-columns: 1fr auto; gap: 36px; align-items: end; }
+    .final h2 { max-width: 700px; margin-bottom: 0; }
+    .final .button { min-width: 218px; }
+
+    /* Footer */
+    footer { padding: 28px 0; border-top: 1px solid rgba(30,30,30,.18); background: var(--yellow); }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; }
+    .footer-brand .brand { font-size: 1.22rem; min-width: auto; }
+    .footer-brand .brand-mark { width: 31px; height: 26px; --cut: var(--yellow); }
+    .footer-copy { margin: 0; color: rgba(30,30,30,.78); font-size: .78rem; }
+    .footer-links { display: flex; gap: 18px; color: rgba(30,30,30,.78); font-size: .76rem; font-weight: 700; }
+    .footer-links a:hover { color: var(--graphite); }
+
+    @media (max-width: 980px) {
+      .hero-grid, .why-grid { grid-template-columns: 1fr; }
+      .hero-copy { max-width: 700px; }
+      .product-stage { min-height: 530px; max-width: 630px; width: 100%; margin: 0 auto; }
+      .section-head { grid-template-columns: 1fr; gap: 14px; }
+      .section-head p { max-width: 520px; }
+      .benefit-grid { grid-template-columns: repeat(3, 1fr); }
+      .workflow { grid-template-columns: 1fr; gap: 12px; }
+      .step { min-height: 0; }
+      .step-arrow { width: 1px; height: 31px; margin: 0 auto; }
+      .step-arrow::after { top: auto; right: -4px; bottom: 0; transform: rotate(135deg); }
+      .why-visual { max-width: 520px; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(calc(100% - 30px), var(--container)); }
+      .section { padding: 78px 0; }
+      .nav { min-height: 66px; gap: 12px; }
+      .nav-links { display: none; }
+      .brand { min-width: auto; font-size: 1.25rem; }
+      .brand-mark { width: 31px; height: 26px; }
+      .nav .button { min-height: 40px; padding: 10px 12px; font-size: .76rem; }
+      .hero { padding: 48px 0 56px; }
+      h1 { font-size: clamp(2.7rem, 13vw, 4.2rem); }
+      h2 { font-size: clamp(2.15rem, 10.5vw, 3.25rem); }
+      .lead { font-size: 1.08rem; }
+      .product-stage { min-height: 480px; margin-top: 10px; }
+      .stage-grid { inset: 10px 0 0; background-size: 38px 38px; }
+      .stage-note { left: 15px; top: 22px; }
+      .phone { width: min(284px, 72vw); transform: translateX(-18px); }
+      .phone-screen { min-height: 446px; padding: 16px 13px 13px; }
+      .kitchen-ticket { right: 0; bottom: 15px; width: 193px; padding: 14px; }
+      .benefit-grid { grid-template-columns: 1fr; }
+      .benefit-card { min-height: 0; }
+      .why-grid { gap: 38px; }
+      .why p { font-size: 1rem; }
+      .final { padding: 76px 0; }
+      .final-grid { grid-template-columns: 1fr; align-items: start; gap: 28px; }
+      .final .button { min-width: 0; width: 100%; }
+      .footer-row, .footer-brand { align-items: flex-start; flex-direction: column; }
+      .footer-row { gap: 19px; }
+      .footer-links { gap: 14px; flex-wrap: wrap; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="TacoFlash, inicio">
+        <svg class="brand-mark" viewBox="0 0 73 60" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 36.5C5 17.45 20.45 2 39.5 2C58.55 2 68.2 16.3 69 29.8L16.5 38.3C12.7 38.9 8.95 38.25 5 36.5Z" fill="currentColor"/>
+          <path d="M35.1 27.7L20.2 44.45H32.7L27.85 58L54.25 35.9H39.95L48.7 17.35L35.1 27.7Z" fill="var(--cut)"/>
+        </svg>
+        <span>Taco<strong>Flash</strong></span>
+      </a>
+      <div class="nav-links" aria-label="Secciones">
+        <a href="#cambia">Lo que cambia</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#por-que">Por qué existe</a>
+      </div>
+      <a class="button" href="#contacto">Quiero conocer TacoFlash <span class="arrow" aria-hidden="true">→</span></a>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Comandas claras, sin rodeos</p>
+          <h1 id="hero-title">Cuando se llena, la comanda tiene que llegar <span class="hero-emphasis">clara.</span></h1>
+          <p class="lead">TacoFlash ayuda a tus meseros a mandar pedidos desde su celular directo a cocina.</p>
+          <p class="lead muted">Sin libretas confundidas.<br>Sin ir y venir.<br>Sin un sistema que estorba.</p>
+          <a class="button" href="#contacto">Quiero conocer TacoFlash <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="product-stage" aria-label="Ejemplo visual de una comanda enviada de un celular a cocina">
+          <div class="stage-grid" aria-hidden="true"></div>
+          <div class="stage-note"><i></i> Pedido listo para cocina</div>
+          <div class="phone" aria-hidden="true">
+            <div class="phone-screen">
+              <div class="phone-top">
+                <span class="phone-title">Nueva comanda</span>
+                <span class="online-chip"><span></span> En línea</span>
+              </div>
+              <div class="table-panel">
+                <div>
+                  <span class="small-label">Mesa</span>
+                  <strong class="table-number">07</strong>
+                </div>
+                <span class="time">8:42 PM</span>
+              </div>
+              <div class="order-list">
+                <div class="order-line">
+                  <span class="quantity">3×</span>
+                  <div><b>Tacos al pastor</b><span>Con todo · Sin cebolla</span></div>
+                </div>
+                <div class="order-line">
+                  <span class="quantity">2×</span>
+                  <div><b>Gringas</b><span>Una sin piña</span></div>
+                </div>
+                <div class="order-line">
+                  <span class="quantity">2×</span>
+                  <div><b>Agua de horchata</b><span>Vaso grande</span></div>
+                </div>
+              </div>
+              <button class="send-button" type="button" tabindex="-1">Enviar a cocina</button>
+            </div>
+          </div>
+          <aside class="kitchen-ticket" aria-hidden="true">
+            <div class="ticket-head"><b>Cocina</b><span>Recibida</span></div>
+            <div class="ticket-table">Mesa 07</div>
+            <div class="ticket-item"><b>3× Pastor</b><span>Sin cebolla</span></div>
+            <div class="ticket-item"><b>2× Gringas</b><span>1 sin piña</span></div>
+            <div class="ticket-item"><b>2× Horchata</b><span>Grande</span></div>
+            <div class="ticket-status"><i></i> Comanda clara</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cambia" aria-labelledby="cambia-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Lo que cambia</p>
+            <h2 id="cambia-title">Menos pasos entre una mesa y la plancha.</h2>
+          </div>
+          <p>Una operación más clara, sin pedirle a tu equipo que cambie la forma en que trabaja.</p>
+        </div>
+
+        <div class="benefit-grid">
+          <article class="benefit-card">
+            <div class="benefit-visual" aria-hidden="true">
+              <div class="clarity-note">
+                <span class="small-label">Mesa 07</span>
+                <div class="scribble"></div>
+                <div class="scribble"></div>
+                <div class="scribble"></div>
+              </div>
+              <span class="clarity-check">✓</span>
+            </div>
+            <h3>Menos errores antes de la plancha.</h3>
+            <p>Mesa, cantidad y pedido claros desde el principio.</p>
+            <p>Para que cocina no tenga que adivinar.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-visual" aria-hidden="true">
+              <div class="phone-mini">
+                <div class="phone-mini-inner">
+                  <div class="phone-mini-line"></div>
+                  <div class="phone-mini-line"></div>
+                  <div class="phone-mini-line"></div>
+                  <div class="phone-mini-line"></div>
+                  <div class="phone-mini-action"></div>
+                </div>
+              </div>
+              <span class="motion-path"></span>
+            </div>
+            <h3>Tu mesero atiende más ligero.</h3>
+            <p>Toma la comanda desde su celular.</p>
+            <p>Con el ritmo de siempre.<br>Solo que llega al momento.</p>
+          </article>
+
+          <article class="benefit-card">
+            <div class="benefit-visual" aria-hidden="true">
+              <div class="fixed-rhythm"><span></span><span></span></div>
+              <div class="taco-shape"></div>
+            </div>
+            <h3>Tu taquería sigue siendo tu taquería.</h3>
+            <p>No cambia tu sazón.<br>No cambia tu forma de atender.</p>
+            <p>Solo quita pasos que hacen perder tiempo.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft" id="como-funciona" aria-labelledby="como-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Cómo funciona</p>
+            <h2 id="como-title">El flujo se entiende de un vistazo.</h2>
+          </div>
+          <p>Menú → mesero → cocina. Solo lo necesario para que el pedido avance.</p>
+        </div>
+
+        <div class="workflow">
+          <article class="step">
+            <div class="step-num">01</div>
+            <div class="step-visual menu-list" aria-hidden="true">
+              <div class="menu-row"><span>Taco al pastor</span><em>+</em></div>
+              <div class="menu-row"><span>Gringa</span><em>+</em></div>
+              <div class="menu-row"><span>Agua fresca</span><em>+</em></div>
+            </div>
+            <h3>Pon tu menú.</h3>
+            <p>Solo lo que realmente vendes.</p>
+          </article>
+          <span class="step-arrow" aria-hidden="true"></span>
+          <article class="step">
+            <div class="step-num">02</div>
+            <div class="step-visual take-order" aria-hidden="true">
+              <div class="take-order-icon"></div>
+              <div class="take-order-lines"><span></span><span></span><span></span><span></span></div>
+            </div>
+            <h3>El mesero toma la comanda.</h3>
+            <p>Desde su celular.<br>Rápido. Fácil de entender.</p>
+          </article>
+          <span class="step-arrow" aria-hidden="true"></span>
+          <article class="step">
+            <div class="step-num">03</div>
+            <div class="step-visual kitchen-card" aria-hidden="true">
+              <div class="kitchen-card-top"><span>Cocina</span><span>Mesa 07</span></div>
+              <div class="kitchen-card-lines"><span></span><span></span><span></span></div>
+            </div>
+            <h3>Cocina la recibe clara.</h3>
+            <p>Para que el pedido avance.</p>
+            <p>Y el cliente no tenga que esperar de más.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section why" id="por-que" aria-labelledby="por-que-title">
+      <div class="container why-grid">
+        <div>
+          <p class="eyebrow">Por qué existe TacoFlash</p>
+          <h2 id="por-que-title">Una buena taquería no debería perder clientes por una comanda mal apuntada.</h2>
+          <p>Ya tienes suficiente con la plancha, las mesas, el calor y la hora pico.</p>
+          <p>TacoFlash no es un sistema enorme para restaurantes.</p>
+          <p>Es una herramienta para una cosa:</p>
+          <p><strong>Que la comanda llegue bien cuando más importa.</strong></p>
+        </div>
+        <aside class="why-visual" aria-label="Pedidos claros en la hora pico">
+          <div class="peak-head">Hora pico <span><i></i> Todo claro</span></div>
+          <div class="peak-orders">
+            <div class="peak-order"><span class="dot"></span><div><b>Mesa 07</b><small>3 Pastor · 2 Gringas</small></div><time>8:42</time></div>
+            <div class="peak-order"><span class="dot"></span><div><b>Mesa 03</b><small>4 Bistec · 2 Refrescos</small></div><time>8:43</time></div>
+            <div class="peak-order"><span class="dot"></span><div><b>Mesa 11</b><small>2 Volcanes · 1 Horchata</small></div><time>8:43</time></div>
+          </div>
+          <div class="peak-foot">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            Pedidos listos para trabajar.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="final" id="contacto" aria-labelledby="final-title">
+      <div class="container final-grid">
+        <div>
+          <p class="eyebrow">TacoFlash</p>
+          <h2 id="final-title">El sabor es tuyo.<br>El orden puede ser más fácil.</h2>
+          <p class="lead">Atiende mejor cuando tu taquería se llena.</p>
+        </div>
+        <a class="button button--dark" href="mailto:hola@tacoflash.mx?subject=Quiero%20probar%20TacoFlash&body=Hola%2C%20quiero%20conocer%20TacoFlash%20para%20mi%20taquer%C3%ADa.">Quiero probar TacoFlash <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div class="footer-brand">
+        <a class="brand" href="#inicio" aria-label="TacoFlash, inicio">
+          <svg class="brand-mark" viewBox="0 0 73 60" aria-hidden="true" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 36.5C5 17.45 20.45 2 39.5 2C58.55 2 68.2 16.3 69 29.8L16.5 38.3C12.7 38.9 8.95 38.25 5 36.5Z" fill="currentColor"/>
+            <path d="M35.1 27.7L20.2 44.45H32.7L27.85 58L54.25 35.9H39.95L48.7 17.35L35.1 27.7Z" fill="var(--cut)"/>
+          </svg>
+          <span>Taco<strong>Flash</strong></span>
+        </a>
+        <p class="footer-copy">Tecnología para taquerías independientes.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#contacto">Solicitar demostración</a>
+        <a href="#inicio">© <span id="year"></span> TacoFlash</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
